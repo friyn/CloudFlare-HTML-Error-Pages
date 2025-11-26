@@ -10,47 +10,49 @@ Project ini dibuat untuk belajar / eksperimen (misalnya untuk demo, prank ringan
   - `523-Origin-is-unreachable.html`
   - `526-Invalid-SSL-certificate.html`
   - `1014-CNAME-Cross-User-Banned.html`
-- **Detail dinamis dengan JavaScript**:
+- **Detail dinamis dengan JavaScript** di setiap halaman error:
   - Ray ID dummy (random hex 16 karakter setiap reload)
   - IP pengunjung (diambil via `https://api.ipify.org?format=json`)
   - Waktu kunjungan (UTC) di header/footer
   - Hostname diambil dari `window.location.hostname`
-- **Index otomatis** dengan `index.php`:
-  - Menampilkan daftar semua file `.html` di folder
-  - Menandai folder (misalnya `cdn-cgi/`)
-  - Menampilkan size dan tanggal modifikasi
-  - Seluruh baris bisa diklik, bukan cuma nama file
+- **Halaman index bergaya Cloudflare** (`index.html`):
+  - Menampilkan daftar beberapa error page yang didefinisikan di array `files` (JavaScript)
+  - Setiap baris bisa diklik untuk membuka file terkait
+  - Menggunakan ikon dan layout yang mirip tampilan error page Cloudflare
 
 ## Struktur Project
 
 Struktur utama:
 
 ```text
-CloudFlareHostError/
+CloudFlare-HTML-Error-Pages/
 ├─ 500-Internal-server-error.html
 ├─ 523-Origin-is-unreachable.html
 ├─ 526-Invalid-SSL-certificate.html
 ├─ 1014-CNAME-Cross-User-Banned.html
-├─ index.php                # index otomatis (file manager mini)
+├─ index.html               # list Error
 └─ cdn-cgi/
-   ├─ styles/main.css       # CSS mirip Cloudflare
-   └─ images/               # ikon browser/cloud/server/error/ok
+   └─ images/              # ikon browser/cloud/server/error/ok
 ```
 
 ## Menjalankan Secara Lokal
 
-Project ini tidak butuh framework khusus, cukup PHP built-in server.
+Project ini tidak butuh framework khusus. Kamu bisa:
 
-```bash
-php -S 127.0.0.1:80
-```
+- Menjalankan PHP built-in server:
 
-Kemudian buka di browser:
+  ```bash
+  php -S 127.0.0.1:80
+  ```
 
-- `http://127.0.0.1/` → halaman index (`index.php`) berisi daftar file HTML.
-- Klik salah satu file, misalnya:
-  - `http://127.0.0.1/500-Internal-server-error.html`
-  - `http://127.0.0.1/523-Origin-is-unreachable.html`
+  Lalu buka di browser:
+
+  - `http://127.0.0.1/` → halaman index (`index.html`) berisi daftar error page.
+  - Klik salah satu file di daftar, misalnya:
+    - `http://127.0.0.1/500-Internal-server-error.html`
+    - `http://127.0.0.1/523-Origin-is-unreachable.html`
+
+- Atau pakai static file server lain (misalnya dari Node, Python, atau langsung double-click `index.html`).
 
 > Jika port 80 bentrok, ganti menjadi port lain (misalnya `127.0.0.1:8080`).
 
@@ -63,8 +65,17 @@ Kemudian buka di browser:
    - Teks "What happened?" dan "What can I do?"
    - Link dokumentasi Cloudflare (kalau ada) di bagian bantuan.
 4. Simpan file.
+5. Edit `index.html` dan tambahkan nama file baru ke array `files` di script:
 
-Halaman index (`index.php`) akan otomatis menampilkan file `.html` baru tersebut di daftar, tanpa perlu di-edit manual.
+   ```js
+   const files = [
+     { name: "500-Internal-server-error.html" },
+     // ...
+     { name: "520-Unknown-error.html" }  // tambahkan di sini
+   ];
+   ```
+
+Setelah itu halaman index (`index.html`) akan menampilkan entri baru di daftar.
 
 ## Catatan Penting
 
